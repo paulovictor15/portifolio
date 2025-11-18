@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portfólio Escolar — Paulo Victor</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* ---------- BASE & RESET ---------- */
+:root{
+  --bg:#f2f2f2; --text:#222; --accent:#4b2e83; --muted:#666;
+  --glass-bg: rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box; margin:0; padding:0; transition: all .35s ease;}
+html,body{height:100%}
+body{font-family:Inter, Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+ 
+/* ---------- LAYOUT ---------- */
+.header{
+  background:linear-gradient(90deg,var(--accent),#321c57);
+  color:#fff; padding:20px 18px; display:flex; align-items:center; justify-content:space-between;
+  gap:12px; position:relative;
+}
+.header h1{font-size:20px; letter-spacing:0.4px;}
+.header .controls{display:flex;gap:8px;align-items:center}
+ 
+/* theme selector */
+#themeSelector{padding:8px 10px;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+ 
+/* nav */
+nav{background:#321c57; display:flex; justify-content:center; gap:8px; flex-wrap:wrap;}
+nav a{color:#fff;padding:12px 18px;text-decoration:none;font-weight:600;}
+nav a:hover{background:#4b2e83;border-radius:8px}
+ 
+/* container */
+.container{max-width:1100px;margin:28px auto;padding:0 18px;}
+.section{padding:36px 0}
+ 
+/* home intro cards (3D parallax) */
+.cards{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;perspective:1200px}
+.card{
+  width:260px;height:160px;border-radius:12px;background:#fff;box-shadow:0 12px 30px rgba(18,18,18,0.08);
+  display:flex;flex-direction:column;align-items:flex-start;padding:18px;cursor:pointer;
+  transform-style:preserve-3d; transition: transform .18s ease, box-shadow .18s ease;
+  border:1px solid rgba(0,0,0,0.04);
+}
+.card img{width:100%;height:90px;object-fit:cover;border-radius:8px;margin-bottom:10px}
+.card h4{margin:0 0 6px;font-size:16px;color:var(--accent)}
+.card p{margin:0;font-size:13px;color:var(--muted)}
+ 
+/* content boxes */
+.conteudo-area{background:#fff;padding:22px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+.btn{display:inline-block;padding:10px 14px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;border:none;cursor:pointer}
+ 
+/* editable paragraph style */
+[contenteditable="true"]{outline:none;border:1px dashed rgba(0,0,0,0.06);padding:8px;border-radius:8px;background:transparent}
+ 
+/* responsive */
+@media (max-width:900px){
+  .card{width:46%}
+  .container{padding:0 12px}
+}
+@media (max-width:600px){
+  .card{width:100%}
+  .header h1{font-size:16px}
+}
+/* ---------- BUTTONS / SMALL UI ---------- */
+.top-right{display:flex;gap:10px;align-items:center}
+.icon-btn{background:rgba(255,255,255,0.12);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:#fff}
+/* ---------- INTRO ANIMATION (FULLSCREEN) ---------- */
+#intro{
+  position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+  background:#000; color:#fff;flex-direction:column;gap:18px;align-items:center;justify-content:center;}
+.intro-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.logo-anim{font-weight:800;font-size:34px;letter-spacing:2px; color:#00eaff; text-shadow:0 0 18px rgba(0,234,255,0.15)}
+.sub-anim{color:#fff;opacity:.7;font-weight:600}
+.intro-bar{width:260px;height:6px;border-radius:999px;background:linear-gradient(90deg,#ff00d9,#00eaff);overflow:hidden}
+.intro-bar > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ffd700,#ff00d9);animation:load 2.1s linear forwards}
+@keyframes load{to{width:100%}} 
+/* skip button */
+#skipIntro{margin-top:12px;background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer} 
+/* ---------- LOGIN MODAL ---------- */
+#loginModal{
+  position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9998;
+  backdrop-filter: blur(6px); background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+}
+.login-card{width:360px;max-width:92%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
+  border:1px solid rgba(255,255,255,0.06); padding:22px;border-radius:12px;color:#fff;box-shadow:0 12px 40px rgba(0,0,0,0.6);position:relative; overflow:hidden}
+.login-card h3{margin-bottom:12px;color:#00eaff}
+.form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.input{padding:12px;border-radius:10px;border:none;outline:none;background:rgba(255,255,255,0.03);color:#fff}
+.login-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:10px}
+.pulse{position:absolute;right:-120px;top:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(0,234,255,0.12),transparent 40%);filter:blur(18px);transform:rotate(25deg);}
+/* ---------- CYBERPUNK THEME (class .cyber) ---------- */
+body.cyber{background:#050007;color:#cfeeff}
+body.cyber .header{background:linear-gradient(90deg,#0f0326,#2b0036);box-shadow:0 6px 30px rgba(203,0,255,0.08)}
+body.cyber nav{background:linear-gradient(90deg,#0a0015,#3a0034)}
+body.cyber .card{background:linear-gradient(180deg, rgba(10,3,22,0.8), rgba(20,2,40,0.85)); border:1px solid rgba(200,50,255,0.12); box-shadow:0 18px 40px rgba(120,0,255,0.08); color:#e8e8ff}
+body.cyber .card h4{color:#ff7df7}
+body.cyber .btn{background:linear-gradient(90deg,#ff00d9,#00eaff); color:#000; box-shadow:0 8px 30px rgba(0,234,255,0.06)}
+body.cyber .conteudo-area{background:linear-gradient(180deg, rgba(5,0,12,0.75), rgba(20,4,40,0.6)); border:1px solid rgba(255,0,255,0.06); color:#dfeeff}
+body.cyber .header h1{color:#79fff3;text-shadow:0 0 12px rgba(0,234,255,0.12)}
+/* glitch animation for headings */
+.glitch{
+  position:relative; display:inline-block; font-weight:800;
+  color: #fff; font-size:28px; letter-spacing:1px;}
+.glitch::before, .glitch::after{
+  content:attr(data-text);
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  clip:rect(0,9999px,0,0);}
+.glitch::before{left:2px; text-shadow:-2px 0 #ff00d9; animation:glitchTop .95s infinite linear}
+.glitch::after{left:-2px; text-shadow:-2px 0 #00eaff; animation:glitchBot .9s infinite linear}
+@keyframes glitchTop{ 0%{clip:rect(0,900px,0,0)} 10%{clip:rect(0,900px,40px,0)} 20%{clip:rect(20px,900px,80px,0)} 30%{clip:rect(0,900px,160px,0)} 40%{clip:rect(10px,900px,60px,0)} 100%{clip:rect(0,900px,0,0)}}
+@keyframes glitchBot{ 0%{clip:rect(0,900px,0,0)} 12%{clip:rect(60px,900px,140px,0)} 24%{clip:rect(20px,900px,60px,0)} 36%{clip:rect(0,900px,120px,0)} 100%{clip:rect(0,900px,0,0)}}
+/* neon particle pseudo */
+.cyber::after{
+  content:""; position:fixed; inset:0; background:
+  radial-gradient(circle at 10% 20%, rgba(255,0,255,0.02), transparent 6%),
+  radial-gradient(circle at 80% 70%, rgba(0,234,255,0.02), transparent 7%);
+  pointer-events:none;}
+/* ---------- extra polish: tiny transitions for theme changes ---------- */
+body, .card, .conteudo-area, .header, nav, .login-card { transition: background .45s ease, color .45s ease, box-shadow .45s ease, transform .18s ease; }
+/* ---------- 3D tilt small device tweak ---------- */
+@media (hover:none) and (pointer:coarse){
+  .card{transform:translateZ(0) !important}}
+</style>
+</head>
+<body class="default">
+<!-- INTRO SCREEN -->
+<div id="intro" aria-hidden="false">
+  <div class="intro-wrap">
+    <div class="logo-anim glitch" data-text="PAULO VICTOR">PAULO VICTOR</div>
+    <div class="sub-anim">Portfólio & Currículo — Desenvolvedor Iniciante</div>
+    <div class="intro-bar"><i></i></div>
+    <button id="skipIntro">Entrar agora</button>
+  </div>
+</div>
+<!-- LOGIN MODAL -->
+<div id="loginModal" aria-hidden="true">
+  <div class="login-card">
+    <div class="pulse"></div>
+    <h3>Entrar no Portfólio</h3>
+    <div class="form-row">
+      <input id="loginUser" class="input" placeholder="Usuário (ex: paulo)" />
+      <input id="loginPass" class="input" placeholder="Senha" type="password" />
+    </div>
+    <div style="display:flex;gap:8px;justify-content:space-between;align-items:center">
+      <label style="color:#aaa;font-size:13px"><input id="remember" type="checkbox"/> Lembrar-me</label>
+      <div class="login-actions">
+        <button class="btn" id="doLogin">Entrar</button>
+        <button class="btn" id="closeLogin" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.06)">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div> 
+<!-- HEADER -->
+<header class="header">
+  <h1><span class="glitch" data-text="PORTFÓLIO">PORTFÓLIO</span> — Paulo Victor</h1> 
+  <div class="controls top-right">
+    <button id="openLogin" class="icon-btn" title="Login">🔒</button>
+    <select id="themeSelector" aria-label="Selecionar tema">
+      <option value="default">Padrão</option>
+      <option value="cyber">Cyberpunk</option>
+      <option value="roxo">Roxo</option>
+      <option value="azul">Azul</option>
+      <option value="verde">Verde</option>
+      <option value="neon">Neon</option>
+      <option value="glass">Glass</option>
+    </select>
+  </div>
+</header>
+<!-- NAV -->
+<nav>
+  <a href="#home">Home</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#projetos">Projetos</a>
+  <a href="curriculo.html">Currículo</a>
+</nav>
+<!-- PAGE CONTENT -->
+<div class="container">
+  <!-- HOME -->
+  <section id="home" class="section">
+    <h2>Bem-vindo ao Meu Portfólio</h2>
+    <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:18px">
+      <div style="flex:1;min-width:280px">
+        <div class="conteudo-area">
+          <h3 class="glitch" data-text="Introdução">Introdução</h3>
+          <p contenteditable="true">Olá — Este é meu portfólio escolar. Navegue pelos projetos, leia o currículo e veja meus trabalhos.</p>
+          <div style="margin-top:12px">
+            <button id="btnPdf" class="btn">Salvar Página em PDF</button>
+            <button id="playIntro" class="btn" style="background:#ff00d9;margin-left:8px">Rever Intro</button>
+          </div>
+        </div>
+      </div>
+      <div style="width:360px;min-width:260px">
+        <div class="conteudo-area">
+          <h3>Dados</h3>
+          <p><strong>Nome:</strong> Paulo Victor Neves Viana</p>
+          <p><strong>Email:</strong> sippaulovicto@gmail.com</p>
+          <p><strong>Telefone:</strong> (11) 96802-33352</p>
+          <p contenteditable="true"><strong>Sobre:</strong> Estagiário de Direito e estudante de T.I.</p>
+          <div style="margin-top:10px">
+            <a href="curriculo.html" class="btn">Abrir Currículo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- 3D CARDS -->
+  <section id="projetos" class="section">
+    <h2>Projetos – Áreas do Conhecimento</h2>
+    <div class="cards" id="cards">
+      <!-- placeholders - substitua as imagens locais -->
+      <div class="card" data-target="linguagens.html">
+        <img src="linguagens.jpg" alt="Linguagens" onerror="this.style.opacity=.6">
+        <h4>Linguagens</h4>
+        <p>Cartaz Parede - Futuro (turma 3TI02)</p></div>
+      <div class="card" data-target="cn.html">
+        <img src="ciencias_natureza.jpg" alt="CN" onerror="this.style.opacity=.6">
+        <h4>Ciências da Natureza</h4>
+        <p>Linha do tempo — Arte Pré-Colombiana</p>
+      </div><div class="card" data-target="ch.html">
+        <img src="ciencias_humanas.jpg" alt="CH" onerror="this.style.opacity=.6">
+        <h4>Ciências Humanas</h4>
+        <p>Ana Michelle Soares — ativismo e paliativos</p>
+      </div>
+      <div class="card" data-target="matematica.html">
+        <img src="matematica.jpg" alt="Matemática" onerror="this.style.opacity=.6">
+        <h4>Matemática</h4>
+        <p>Área em construção</p>
+      </div><div class="card" data-target="ti.html">
+        <img src="FTP - T.I. portifolio.jpg" alt="T.I." onerror="this.style.opacity=.6">
+        <h4>Tecnologia da Informação</h4>
+        <p>FTP / T.I. — aguardando arquivo</p>
+      </div></div></section>
+  <!-- SOBRE (detalhes) -->
+  <section id="sobre" class="section">
+    <h2>Sobre Mim</h2>
+    <div class="conteudo-area">
+      <p contenteditable="true">
+        Bom dia! Meu nome é Paulo e estou muito feliz por estar aqui por esta oportunidade. Sou um estagiário de direito de 19 anos,
+        com grande paixão pela justiça e pelos direitos de todos. Tenho 3 anos de experiência como assistente jurídico e gosto de trabalhar com pessoas.
+      </p></div></section></div><script>
+/* -------------------- INTRO LOGIC -------------------- */
+/* ============================================================
+   INTRO ANIMATION
+============================================================ */
+const intro = document.getElementById('intro');
+const skipIntro = document.getElementById('skipIntro');
+const playIntro = document.getElementById('playIntro');
+
+function hideIntro() {
+    intro.style.opacity = 0;
+    intro.style.transform = 'scale(.98)';
+    setTimeout(() => intro.style.display = 'none', 450);
+    localStorage.setItem('introSeen', '1');
+}
+
+function playIntroAnimation() {
+    intro.style.display = 'flex';
+    const bar = intro.querySelector('i');
+
+    setTimeout(() => {
+        bar.style.width = '0%';
+        bar.style.width = '100%';
+    }, 50);
+
+    setTimeout(hideIntro, 2100);
+}
+
+skipIntro.addEventListener('click', hideIntro);
+playIntro.addEventListener('click', playIntroAnimation);
+
+if (!localStorage.getItem('introSeen')) {
+    const bar = intro.querySelector('i');
+    setTimeout(() => {
+        bar.style.width = '100%';
+        setTimeout(hideIntro, 2200);
+    }, 100);
+} else {
+    intro.style.display = 'none';
+}
+
+/* ============================================================
+   THEME SYSTEM
+============================================================ */
+const themeSelector = document.getElementById('themeSelector');
+const body = document.body;
+
+function applyTheme(theme) {
+    body.className = theme;
+    themeSelector.value = theme;
+    localStorage.setItem('themeMode', theme);
+}
+
+// aplicar tema salvo
+applyTheme(localStorage.getItem('themeMode') || 'default');
+
+// troca via seletor
+themeSelector.addEventListener('change', e => applyTheme(e.target.value));
+
+// acesso rápido via teclado
+document.addEventListener('keydown', e => {
+    const k = e.key.toLowerCase();
+    if (k === 'c') applyTheme('cyber');
+    if (k === 'd') applyTheme('default');
+    if (k === 'p') applyTheme('cyber');
+});
+
+/* ============================================================
+   LOGIN MODAL
+============================================================ */
+const loginModal = document.getElementById('loginModal');
+const openLogin = document.getElementById('openLogin');
+const closeLogin = document.getElementById('closeLogin');
+const doLogin = document.getElementById('doLogin');
+
+openLogin.addEventListener('click', () => {
+    loginModal.style.display = 'flex';
+    loginModal.setAttribute('aria-hidden', 'false');
+});
+
+closeLogin.addEventListener('click', () => {
+    loginModal.style.display = 'none';
+    loginModal.setAttribute('aria-hidden', 'true');
+});
+
+loginModal.addEventListener('click', ev => {
+    if (ev.target === loginModal) {
+        loginModal.style.display = 'none';
+        loginModal.setAttribute('aria-hidden', 'true');
+    }
+});
+
+// login fake
+doLogin.addEventListener('click', () => {
+    const user = document.getElementById('loginUser').value || 'Usuário';
+    alert(`Bem-vindo, ${user} — login simulado.`);
+    loginModal.style.display = 'none';
+});
+
+/* ============================================================
+   3D CARDS
+============================================================ */
+const cards = document.querySelectorAll('.card');
+
+function handleCardMove(e, card) {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+
+    const rotateX = (y - 0.5) * 14;
+    const rotateY = (x - 0.5) * -14;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+    card.style.boxShadow = `0 18px 50px rgba(0,0,0,0.2)`;
+}
+
+cards.forEach(card => {
+    card.addEventListener('mousemove', e => handleCardMove(e, card));
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'none';
+        card.style.boxShadow = '';
+    });
+
+    card.addEventListener('click', () => {
+        const tgt = card.dataset.target;
+        if (tgt) window.location.href = tgt;
+    });
+});
+
+// remover 3D em mobile
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    cards.forEach(c => c.style.transform = 'none');
+}
+
+/* ============================================================
+   PRINT TO PDF
+============================================================ */
+document.getElementById('btnPdf').addEventListener('click', () => window.print());</script>
+</body>
+</html>
